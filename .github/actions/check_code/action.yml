@@ -1,0 +1,8 @@
+name: Checking code
+description: Checking code using static analysis tools
+runs:
+  using: composite
+  steps:
+    - name: Check code with pint
+      shell: bash
+      run: ./vendor/bin/pint --config config/pint.json -v
