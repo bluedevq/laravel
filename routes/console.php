@@ -1,19 +1,17 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
+use App\Jobs\BackupDB;
+use App\Jobs\BackupLog;
 use Illuminate\Support\Facades\Artisan;
 
-/*
-|--------------------------------------------------------------------------
-| Console Routes
-|--------------------------------------------------------------------------
-|
-| This file is where you may define all of your Closure based console
-| commands. Each Closure is bound to a command instance allowing a
-| simple approach to interacting with each command's IO methods.
-|
-*/
+// backup logs
+Artisan::command('log:backup {params?*}', function ($params) {
+    BackupLog::dispatch($params);
+    $this->info('App\Jobs\BackupLog: Successfully !');
+})->purpose('Backup logs');
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+// backup database
+Artisan::command('db:backup {params?*}', function ($params) {
+    BackupDB::dispatch($params);
+    $this->info('App\Jobs\BackupDB: Successfully !');
+})->purpose('Backup database');
