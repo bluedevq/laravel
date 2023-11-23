@@ -11,6 +11,7 @@
         "laravel/framework": "^10.3",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "prettus/laravel-validation": "^1.5",
         "vyuldashev/laravel-openapi": "^1.11"
     },
     "require-dev": {
@@ -30,7 +31,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Base/Helpers/Common.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
