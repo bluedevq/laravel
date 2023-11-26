@@ -4,37 +4,28 @@ namespace App\Base\Services;
 
 use App\Base\Helpers\ExportCsv;
 use App\Base\Providers\Facades\Storages\BaseStorage;
+use App\Base\Repositories\BaseRepository;
 
 class BaseService
 {
-    protected $repository;
+    public $repository;
 
     public function __construct()
     {
-        //
-    }
-
-    public function setRepository($repository): void
-    {
-        $this->repository = $repository;
-    }
-
-    public function getRepository()
-    {
-        return $this->repository;
+        $this->repository = app(BaseRepository::class);
     }
 
     public function index($params)
     {
-        return $this->getRepository()->getListForIndex($params);
+        return $this->repository->list($params);
     }
 
     public function store($params): bool
     {
         try {
-            $this->prepareBeforeStore($params);
+            $this->beforeStore($params);
             $this->uploadToMedia($params);
-            $this->getRepository()->create($params);
+            $this->repository->create($params);
 
             return true;
         } catch (\Exception $exception) {
@@ -47,9 +38,9 @@ class BaseService
     public function update($id, $params): bool
     {
         try {
-            $this->prepareBeforeUpdate($params);
+            $this->beforeUpdate($params);
             $this->uploadToMedia($params);
-            $this->getRepository()->update($id, $params);
+            $this->repository->update($id, $params);
 
             return true;
         } catch (\Exception $exception) {
@@ -62,7 +53,7 @@ class BaseService
     public function destroy($id): bool
     {
         try {
-            $this->getRepository()->delete($id);
+            $this->repository->delete($id);
 
             return true;
         } catch (\Exception $exception) {
@@ -74,9 +65,7 @@ class BaseService
 
     public function downloadCsv($params, $filename, $headers): void
     {
-        $data = $this->getRepository()->getListForExport($params);
-        $export = new ExportCsv($filename);
-        $export->export($headers, $data);
+        (new ExportCsv($filename))->export($headers, $this->repository->export($params));
     }
 
     protected function uploadToMedia(&$params, $subFolder = ''): void
@@ -103,12 +92,12 @@ class BaseService
         }
     }
 
-    protected function prepareBeforeStore(&$params): void
+    protected function beforeStore(&$params): void
     {
         //
     }
 
-    protected function prepareBeforeUpdate(&$params): void
+    protected function beforeUpdate(&$params): void
     {
         //
     }
