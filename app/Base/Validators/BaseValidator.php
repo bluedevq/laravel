@@ -28,7 +28,7 @@ class BaseValidator extends LaravelValidator
         $this->rules = [];
         $this->messages = [];
         $this->data = [];
-        $this->model = null;
+        $this->model ?? null;
     }
 
     public function getModel()

@@ -2,6 +2,7 @@
 
 namespace App\Base\Repositories;
 
+use App\Base\Models\BaseModel;
 use App\Base\Traits\CustomQuery;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ class BaseRepository implements RepositoryInterface
 
     public function __construct()
     {
-        $this->setModel();
+        $this->model = app(BaseModel::class);
         $this->init($this->getModel()->getTable());
     }
 

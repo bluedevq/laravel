@@ -1,6 +1,5 @@
 <?php
 
-use Collective\Html\HtmlFacade as Html;
 use App\Base\Helpers\Device;
 use App\Base\Helpers\Url;
 use App\Base\Providers\Facades\Log\ChannelLog;
@@ -377,18 +376,36 @@ if (!function_exists('loadFiles')) {
         $result = '';
 
         foreach ($files as $item) {
-            $filePath = str('assets')->append('/' . $type . (!empty($area) ? '/' . $area : '') . '/' . $item . '.' . $type);
+            $file = $item . '.' . $type;
 
-            /*
+            if ($area) {
+                $file = $area . '/' . $file;
+            }
+
+            $filePath = 'assets' . '/' . $type . '/' . $file;
+
             if (!file_exists(public_path($filePath))) {
                 continue;
             }
-            */
 
-            $result .= 'css' == $type ? Html::style(asset($filePath)) : Html::script(asset($filePath));
+            $result .= 'css' == $type ? stylesheet(asset($filePath)) : script(asset($filePath));
         }
 
         return $result;
+    }
+}
+
+if (!function_exists('stylesheet')) {
+    function stylesheet(string $file): string
+    {
+        return '<link rel="stylesheet" href="' . buildVersion($file) . '">';
+    }
+}
+
+if (!function_exists('script')) {
+    function script(string $file): string
+    {
+        return '<script src="' . buildVersion($file) . '"></script>';
     }
 }
 

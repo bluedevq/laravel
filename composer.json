@@ -13,6 +13,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "prettus/laravel-validation": "^1.5",
+        "spatie/laravel-html": "^3.3",
         "vyuldashev/laravel-openapi": "^1.11"
     },
     "require-dev": {

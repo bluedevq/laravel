@@ -22,4 +22,7 @@ return [
             'as' => 'web.',
         ],
     ],
+
+    // static version for js, css...
+    'static_version' => env('STATIC_VERSION', date('YmdHis')),
 ];
