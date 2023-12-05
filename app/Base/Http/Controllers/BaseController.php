@@ -2,6 +2,12 @@
 
 namespace App\Base\Http\Controllers;
 
+use App\Base\Repositories\BaseRepository;
+use App\Base\Services\BaseService;
+use App\Base\Validators\BaseValidator;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -20,22 +26,25 @@ class BaseController extends Controller
 
     protected $repository;
 
-    protected $validator;
-
     protected $service;
+
+    protected $validator;
 
     public function __construct()
     {
         $this->title = '';
         $this->viewData = [];
+        $this->repository = app(BaseRepository::class);
+        $this->service = app(BaseService::class);
+        $this->validator = app(BaseValidator::class);
     }
 
-    public function setViewData(array $data)
+    public function setViewData(array $data): void
     {
         $this->viewData = array_merge($this->viewData, $data);
     }
 
-    public function getViewData($item = null)
+    public function getViewData($item = null): array
     {
         if (!is_null($item)) {
             return data_get($this->viewData, $item);
@@ -44,7 +53,7 @@ class BaseController extends Controller
         return $this->viewData;
     }
 
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
@@ -54,7 +63,7 @@ class BaseController extends Controller
         return $this->title;
     }
 
-    public function render($view = null, array $data = [], array $mergeData = [])
+    public function render($view = null, array $data = [], array $mergeData = []): View|Application|Factory|\Illuminate\Contracts\Foundation\Application|null
     {
         $area = getArea();
         $tmp = !empty($area) ? $area . '.' : '';

@@ -90,7 +90,7 @@ class BaseMail extends Mailable
         return [];
     }
 
-    protected function encodeMimeHeader($string)
+    protected function encodeMimeHeader($string): string
     {
         if (!strlen($string)) {
             return "";
