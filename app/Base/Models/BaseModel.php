@@ -2,6 +2,7 @@
 
 namespace App\Base\Models;
 
+use App\Base\Traits\HidesDefaultAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -9,6 +10,7 @@ use Illuminate\Support\Arr;
 class BaseModel extends Model
 {
     use HasFactory;
+    use HidesDefaultAttributes;
 
     public $timestamps = false;
 

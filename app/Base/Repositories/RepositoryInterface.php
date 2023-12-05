@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Base\Repositories\Contracts;
+namespace App\Base\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 
-interface BaseRepositoryInterface
+interface RepositoryInterface
 {
     public function find($id, array $columns = ['*']);
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Base\Validators\Concerns;
+namespace App\Base\Traits\Validations;
 
 use Illuminate\Support\Facades\DB;
 
-trait BaseValidatesAttributes
+trait ValidatesAttributes
 {
     protected $customMessages = [
         'date_format_multiple' => 'The :attribute field does not match the format datetime.',

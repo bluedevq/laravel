@@ -2,17 +2,64 @@
 
 namespace App\Base\Repositories;
 
-use App\Base\Repositories\Contracts\BaseRepositoryInterface;
+use App\Base\Traits\CustomQuery;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
-class BaseRepository implements BaseRepositoryInterface
+class BaseRepository implements RepositoryInterface
 {
-    protected $model;
+    use CustomQuery;
+
+    public $model;
 
     public function __construct()
     {
         $this->setModel();
+        $this->init($this->getModel()->getTable());
+    }
+
+    public function getQuery(array $criteria = [])
+    {
+        return $this->newQuery()->getQuery();
+    }
+
+    public function newQuery()
+    {
+        return $this->model instanceof Model ? $this->model->newQuery() : clone $this->model;
+    }
+
+    public function setModel()
+    {
+        if (empty($this->model)) {
+            throw new Exception("Model is not defined.");
+        }
+
+        $model = app($this->model);
+
+        if (!$model instanceof Model) {
+            throw new Exception("Class {$this->model} must be an instance of Illuminate\\Database\\Eloquent\\Model");
+        }
+
+        $this->model = $model;
+
+        return $this->model;
+    }
+
+    public function getModel(): ?Model
+    {
+        return $this->model instanceof Model
+            ? clone $this->model
+            : $this->model->getModel();
+    }
+
+    public static function __callStatic($method, $arguments)
+    {
+        return call_user_func_array([new static(), $method], $arguments);
+    }
+
+    public function __call($method, $arguments)
+    {
+        return call_user_func_array([$this->model, $method], $arguments);
     }
 
     public function find($id, array $columns = ['*'])
@@ -163,47 +210,13 @@ class BaseRepository implements BaseRepositoryInterface
         return $this->newQuery()->count($columns);
     }
 
-    public function getQuery(array $criteria = [])
+    public function list(array $params, array $columns = [])
     {
-        return $this->newQuery()->getQuery();
+        return $this->search($params, $columns);
     }
 
-    public function newQuery()
+    public function export(array $params)
     {
-        return $this->model instanceof Model ? $this->model->newQuery() : clone $this->model;
-    }
-
-    public function setModel()
-    {
-        if (empty($this->model)) {
-            throw new Exception("Model is not defined.");
-        }
-
-        $model = app($this->model);
-
-        if (!$model instanceof Model) {
-            throw new Exception("Class {$this->model} must be an instance of Illuminate\\Database\\Eloquent\\Model");
-        }
-
-        $this->model = $model;
-
-        return $this->model;
-    }
-
-    public function getModel(): ?Model
-    {
-        return $this->model instanceof Model
-            ? clone $this->model
-            : $this->model->getModel();
-    }
-
-    public static function __callStatic($method, $arguments)
-    {
-        return call_user_func_array([new static(), $method], $arguments);
-    }
-
-    public function __call($method, $arguments)
-    {
-        return call_user_func_array([$this->model, $method], $arguments);
+        return $this->search($params, $columns);
     }
 }

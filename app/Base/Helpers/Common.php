@@ -523,13 +523,8 @@ if (!function_exists('escape_like')) {
     }
 }
 
-if (!function_exists('is_json')) {
-    /**
-     * check is json string
-     *
-     * @return bool
-     */
-    function is_json($string)
+if (!function_exists('isJson')) {
+    function isJson($string): bool
     {
         try {
             json_decode($string);
@@ -538,5 +533,12 @@ if (!function_exists('is_json')) {
         } catch (\Exception $exception) {
             return false;
         }
+    }
+}
+
+if (!function_exists('getFileUrl')) {
+    function getFileUrl($url): string
+    {
+        return BaseStorage::url($url);
     }
 }

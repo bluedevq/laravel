@@ -168,4 +168,23 @@ class BaseValidator extends LaravelValidator
             return null === $value ? 'NULL' : $value;
         }, $params));
     }
+
+    public function validateCreate($data): bool
+    {
+        return $this->addRulesMessages()->with($data)->passes();
+    }
+
+    public function validateUpdate($data): bool
+    {
+        return $this->addRulesMessages()->with($data)->passes();
+    }
+
+    public function validateShow($id): bool
+    {
+        $modelName = app($this->model)->getModel()->getTable();
+        $data = ['id' => $id];
+        $rules = ['id' => 'required|integer|custom_exists:' . $modelName . ',id'];
+
+        return $this->addRulesMessages($rules, [], false)->with($data)->passes();
+    }
 }
